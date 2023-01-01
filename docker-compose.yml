@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8-debian
+    environment:
+      - MYSQL_DATABASE='pagaew'
+      - MYSQL_ROOT_PASSWORD='pagaewweagap'
+    volumes:
+      - pagaew-data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+
+
+volumes:
+  pagaew-data:
