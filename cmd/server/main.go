@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,8 +10,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/marioidival/pagaew/cmd/server/handlers"
 	"github.com/peterbourgon/ff"
+
+	"github.com/marioidival/pagaew/cmd/server/handlers"
+	"github.com/marioidival/pagaew/pkg/database"
 )
 
 func main() {
@@ -35,17 +36,21 @@ func run() error {
 		webserverAddr = fs.String("addr", ":3000", "webserver addr - default :3000")
 	)
 
-	fmt.Println(databaseURL)
-
 	if err := ff.Parse(fs, os.Args[1:], ff.WithEnvVarNoPrefix()); err != nil {
 		return err
 	}
 
+	dbc, err := database.Open(context.Background(), *databaseURL)
+	if err != nil {
+		return err
+	}
+	defer dbc.Close()
+
 	// server setup
-	mux := handlers.Setup()
+	mux := handlers.Setup(dbc)
 
 	server := &http.Server{
-		Addr: *webserverAddr,
+		Addr:    *webserverAddr,
 		Handler: mux,
 	}
 

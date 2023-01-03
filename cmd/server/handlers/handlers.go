@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/marioidival/pagaew/internal/api"
+	"github.com/marioidival/pagaew/pkg/database"
 )
 
 type Server interface {
@@ -13,7 +14,7 @@ type Server interface {
 }
 
 // Setup create the basic handlers to API
-func Setup() *echo.Echo {
+func Setup(dbc *database.Client) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(500)))
 
