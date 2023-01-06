@@ -45,3 +45,7 @@ func (c *Client) QueryRow(ctx context.Context, query string, args ...any) *sql.R
 func (c *Client) Exec(ctx context.Context, query string, args ...any) (sql.Result, error) {
 	return c.db.ExecContext(ctx, query, args...)
 }
+
+func (c *Client) Ping() error {
+	return c.db.Ping()
+}

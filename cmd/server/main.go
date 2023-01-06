@@ -32,7 +32,7 @@ func run() error {
 	fs := flag.NewFlagSet("server", flag.ExitOnError)
 
 	var (
-		databaseURL   = fs.String("database-url", "", "database url")
+		databaseURL   = fs.String("database-url", "root:pagaewweagap@/pagaew", "database url")
 		webserverAddr = fs.String("addr", ":3000", "webserver addr - default :3000")
 	)
 

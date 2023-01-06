@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/marioidival/pagaew/internal/api"
+	"github.com/marioidival/pagaew/internal/repository"
 	"github.com/marioidival/pagaew/pkg/database"
 )
 
@@ -18,7 +19,9 @@ func Setup(dbc *database.Client) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(500)))
 
-	server := api.NewServer()
+	i := repository.NewInvoiceMemoryRepository()
+	l := repository.NewLogMemoryRepository()
+	server := api.NewServer(i, l)
 
 	registerHandlers(e, server)
 
@@ -28,5 +31,5 @@ func Setup(dbc *database.Client) *echo.Echo {
 
 func registerHandlers(router *echo.Echo, server Server) {
 	router.POST("/XXXX", server.Webhook)
-	router.POST("/YYYY", server.Load)
+	router.POST("/load", server.Load)
 }
