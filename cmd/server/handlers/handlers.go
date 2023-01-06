@@ -15,12 +15,13 @@ type Server interface {
 }
 
 // Setup create the basic handlers to API
-func Setup(dbc *database.Client) *echo.Echo {
+func Setup(dbc *database.Client, productionEnv bool) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(500)))
 
 	i := repository.NewInvoiceMemoryRepository()
 	l := repository.NewLogMemoryRepository()
+
 	server := api.NewServer(i, l)
 
 	registerHandlers(e, server)
@@ -30,6 +31,6 @@ func Setup(dbc *database.Client) *echo.Echo {
 
 
 func registerHandlers(router *echo.Echo, server Server) {
-	router.POST("/XXXX", server.Webhook)
+	router.POST("/webhook", server.Webhook)
 	router.POST("/load", server.Load)
 }

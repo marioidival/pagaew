@@ -81,10 +81,9 @@ func NewLogMemoryRepository() LogRepository {
 }
 
 func (l *LogMemory) Save(ctx context.Context, logInvoice LogInvoice) error {
-	prevLogInvoice, loaded := l.store.LoadOrStore(logInvoice.DebtID, logInvoice)
+	_, loaded := l.store.LoadOrStore(logInvoice.DebtID, logInvoice)
 	if loaded {
-		l.store.Store(logInvoice.DebtID, prevLogInvoice)
-		return fmt.Errorf("%d log invoice already exists", logInvoice.DebtID)
+		return ErrInvoiceAlreadyPaid
 	}
 
 	return nil

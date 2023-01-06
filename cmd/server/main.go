@@ -34,6 +34,7 @@ func run() error {
 	var (
 		databaseURL   = fs.String("database-url", "root:pagaewweagap@/pagaew", "database url")
 		webserverAddr = fs.String("addr", ":3000", "webserver addr - default :3000")
+		environment = fs.String("ENVIRONMENT", "test", "environment of system")
 	)
 
 	if err := ff.Parse(fs, os.Args[1:], ff.WithEnvVarNoPrefix()); err != nil {
@@ -47,7 +48,7 @@ func run() error {
 	defer dbc.Close()
 
 	// server setup
-	mux := handlers.Setup(dbc)
+	mux := handlers.Setup(dbc, *environment == "prod")
 
 	server := &http.Server{
 		Addr:    *webserverAddr,

@@ -19,6 +19,7 @@ const (
 
 	// datetime layout
 	layout = "2006-01-02"
+	layoutWitTime = "2006-01-02 15:04:05"
 )
 
 var emailRegex = regexp.MustCompile(`^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$`)

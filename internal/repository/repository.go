@@ -6,7 +6,16 @@ import (
 	"time"
 )
 
-var ErrInvoicesAlreadyExists = errors.New("invoices already exists")
+const (
+	DONE    = "DONE"
+	ERROR   = "ERROR"
+	PENDING = "PENDING"
+)
+
+var (
+	ErrInvoicesAlreadyExists = errors.New("invoices already exists")
+	ErrInvoiceAlreadyPaid    = errors.New("invoice already paid")
+)
 
 type Invoice struct {
 	Name         string
@@ -23,11 +32,19 @@ type InvoiceRepository interface {
 	Update(ctx context.Context, invoice Invoice) error
 }
 
+type LogInvoiceRequest struct {
+	DebtID     string  `json:"debtId"`
+	PaidAt     string  `json:"paidAt"`
+	PaidAmount float64 `json:"paidAmount"`
+	PaidBy     string  `json:"paidBy"`
+}
+
 type LogInvoice struct {
-	DebtID     uint      `json:"debtId"`
-	PaidAt     time.Time `json:"paidAt"`
-	PaidAmount float64   `json:"paidAmount"`
-	PaidBy     string    `json:"paidBy"`
+	DebtID     string
+	PaidAt     time.Time
+	PaidAmount float64
+	PaidBy     string
+	Status     string
 }
 
 type LogRepository interface {
