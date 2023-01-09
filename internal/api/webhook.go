@@ -27,6 +27,9 @@ func (s *Server) Webhook(ctx echo.Context) error {
 		if errors.Is(err, repository.ErrInvoiceAlreadyPaid) {
 			return ctx.JSON(http.StatusConflict, echo.Map{"message": err.Error()})
 		}
+		if errors.Is(err, repository.ErrInvoiceNotFound) {
+			return ctx.JSON(http.StatusNotFound, echo.Map{"message": err.Error()})
+		}
 		return ctx.JSON(http.StatusInternalServerError, echo.Map{"message": err.Error()})
 	}
 
