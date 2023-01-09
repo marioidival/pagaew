@@ -17,11 +17,6 @@ import (
 )
 
 func main() {
-
-	// TODO: criar um pkg do server
-	// TODO: criar um pkg para db connection
-	// TODO: pegar as infos via env (dotenv)
-
 	if err := run(); err != nil {
 		log.Fatal(err.Error())
 	}
