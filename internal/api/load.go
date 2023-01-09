@@ -44,7 +44,12 @@ func (s *Server) Load(ctx echo.Context) error {
 			return ctx.JSON(http.StatusUnprocessableEntity, echo.Map{"message": err.Error()})
 		}
 
-		invoices = append(invoices, toInvoice(row))
+		invoice, err := toInvoice(row)
+		if err != nil {
+			return ctx.JSON(http.StatusUnprocessableEntity, echo.Map{"message": err.Error()})
+		}
+
+		invoices = append(invoices, *invoice)
 	}
 
 	if err := s.invoiceRepo.Save(ctx.Request().Context(), invoices); err != nil {
@@ -58,16 +63,22 @@ func (s *Server) Load(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, echo.Map{"message": "invoices saved successfully"})
 }
 
-func toInvoice(row []string) repository.Invoice {
-	debtAmountValue, _ := toDebtAmount(row[debtAmount])
-	debtDueDateValue, _ := toDebtDueDate(row[debtDueDate])
+func toInvoice(row []string) (*repository.Invoice, error) {
+	debtAmountValue, err := toDebtAmount(row[debtAmount])
+	if err != nil {
+		return nil, err
+	}
+	debtDueDateValue, err := toDebtDueDate(row[debtDueDate])
+	if err != nil {
+		return nil, err
+	}
 
-	return repository.Invoice{
+	return &repository.Invoice{
 		Name:         row[name],
 		GovernmentID: row[governmentID],
 		Email:        row[email],
 		DebtAmount:   debtAmountValue,
 		DebtDueDate:  debtDueDateValue,
 		DebtID:       row[debtID],
-	}
+	}, nil
 }

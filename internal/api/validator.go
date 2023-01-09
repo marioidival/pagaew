@@ -109,8 +109,8 @@ func toDebtAmount(value string) (float64, error) {
 
 func toDebtDueDate(value string) (time.Time, error) {
 	dateValue, err := time.Parse(layout, value)
-	if err == nil {
-		return time.Time{}, nil
+	if err != nil {
+		return time.Time{}, err
 	}
 
 	return dateValue, nil

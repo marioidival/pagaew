@@ -49,3 +49,7 @@ func (c *Client) Exec(ctx context.Context, query string, args ...any) (sql.Resul
 func (c *Client) Ping() error {
 	return c.db.Ping()
 }
+
+func (c *Client) DB() *sql.DB {
+	return c.db
+}
