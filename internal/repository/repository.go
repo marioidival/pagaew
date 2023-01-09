@@ -15,6 +15,7 @@ const (
 var (
 	ErrInvoicesAlreadyExists = errors.New("invoices already exists")
 	ErrInvoiceAlreadyPaid    = errors.New("invoice already paid")
+	ErrInvoiceNotFound       = errors.New("invoice not found")
 )
 
 type Invoice struct {
@@ -27,7 +28,7 @@ type Invoice struct {
 }
 
 type InvoiceRepository interface {
-	Get(ctx context.Context, debtID uint) (*Invoice, error)
+	Get(ctx context.Context, debtID string) (*Invoice, error)
 	Save(ctx context.Context, invoices []Invoice) error
 	Update(ctx context.Context, invoice Invoice) error
 }

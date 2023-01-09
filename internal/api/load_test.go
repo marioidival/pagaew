@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/labstack/echo/v4"
@@ -38,8 +39,9 @@ func loadTestFile(t *testing.T, filename string) (*bytes.Buffer, error) {
 func newServerInstance(t *testing.T) *Server {
 	t.Helper()
 
-	invoiceRepo := repository.NewInvoiceMemoryRepository()
-	logRepo := repository.NewLogMemoryRepository()
+	store := sync.Map{}
+	invoiceRepo := repository.NewInvoiceMemoryRepository(&store)
+	logRepo := repository.NewLogMemoryRepository(&store)
 
 	return NewServer(invoiceRepo, logRepo)
 }

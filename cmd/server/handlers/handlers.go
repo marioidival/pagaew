@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"sync"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
@@ -19,8 +21,9 @@ func Setup(dbc *database.Client, productionEnv bool) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(500)))
 
-	i := repository.NewInvoiceMemoryRepository()
-	l := repository.NewLogMemoryRepository()
+	store := sync.Map{}
+	i := repository.NewInvoiceMemoryRepository(&store)
+	l := repository.NewLogMemoryRepository(&store)
 
 	server := api.NewServer(i, l)
 
