@@ -46,7 +46,7 @@ func toLogInvoice(request repository.LogInvoiceRequest) (*repository.LogInvoice,
 		DebtID:     request.DebtID,
 		PaidAt:     t,
 		PaidAmount: request.PaidAmount,
-		PaidBy:     request.PaidAt,
+		PaidBy:     request.PaidBy,
 		Status:     repository.PENDING,
 	}, nil
 }

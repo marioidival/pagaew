@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"time"
 
 	"github.com/go-sql-driver/mysql"
 
@@ -124,10 +123,17 @@ func (l *LogMySQL) Save(ctx context.Context, logInvoice LogInvoice) error {
 		"INSERT INTO log_invoice(debt_id, paid_amount, paid_at, paid_by, status) VALUES (?, ?, ?, ?, ?)",
 		logInvoice.DebtID,
 		logInvoice.PaidAmount,
-		logInvoice.PaidAt.Format(time.RFC3339),
+		logInvoice.PaidAt.Format("2006-01-02 15:04:05"),
 		logInvoice.PaidBy,
 		logInvoice.Status,
 	)
+	if err != nil {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+			return ErrInvoiceAlreadyPaid
+		}
+		return err
+	}
 
 	if err = tx.Commit(); err != nil {
 		return err
