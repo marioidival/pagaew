@@ -40,7 +40,7 @@ func migration(dbURL string) error {
 		return err
 	}
 
-	m, err := migrate.NewWithDatabaseInstance("file://cmd/dbmigrate/migrations", "mysql", driver)
+	m, err := migrate.NewWithDatabaseInstance("file://migrations", "mysql", driver)
 	if err != nil {
 		return err
 	}
@@ -61,6 +61,8 @@ func run() error {
 	if err := migration(*databaseURL); err != nil {
 		return err
 	}
+
+	log.Println("migration cmd done!")
 
 	return nil
 }

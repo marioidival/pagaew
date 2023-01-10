@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db:
+  mysql:
     image: mysql:8-debian
     environment:
       MYSQL_DATABASE: 'pagaew'
@@ -9,3 +9,30 @@ services:
       MYSQL_ROOT_HOST: '%'
     ports:
       - '3306:3306'
+  
+  server-migrate:
+    build: .
+    command: ./dbmigrate
+    environment:
+      DATABASE_URL: 'root:pagaewweagap@tcp(mysql)/pagaew'
+    links:
+      - mysql
+
+  server:
+    build: .
+    command: ./server
+    environment:
+      ENVIRONMENT: 'prod'
+      DATABASE_URL: 'root:pagaewweagap@tcp(mysql)/pagaew'
+    ports:
+      - '3000:3000'
+    links:
+      - mysql
+
+  job:
+    build: .
+    command: ./job
+    environment:
+      DATABASE_URL: 'root:pagaewweagap@tcp(mysql)/pagaew'
+    links:
+      - mysql

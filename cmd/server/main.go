@@ -40,6 +40,9 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	if err := dbc.Ping(); err != nil {
+		return err
+	}
 	defer dbc.Close()
 
 	// server setup
